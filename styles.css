@@ -26,12 +26,12 @@ body {
   cursor: pointer;
   font-size: 2rem;
   border: 1px solid white;
-  background-color: white;
+  background-color: rgb(255, 255, 255, 0.75);
   opacity: 0.75;
 }
 
 .calculator-grid button:hover {
-  opacity: 1;
+  background-color: rgb(255, 255, 255, 1);
 }
 
 .span-two {

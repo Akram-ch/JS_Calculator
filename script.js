@@ -8,7 +8,7 @@ class Calculator{
     clear(){
         this.currentOperand = '';
         this.previousOperand = '';
-        this.operand = undefined;
+        this.operation = undefined;
         this.updateDisplay();
     }
 
@@ -19,33 +19,63 @@ class Calculator{
 
     updateDisplay(){
         this.currentOperandTextElement.innerText = this.currentOperand;
-        this.previousOperandTextElement.innerText = this.previousOperand;
+        if (this.operation != undefined)
+            this.previousOperandTextElement.innerText = this.previousOperand + ' ' + this.operation;
+        else
+            this.previousOperandTextElement.innerText = this.previousOperand;
+        console.log('while updating :' + this.previousOperand);
     }
 
     compute() {
         this.result = 0;
-        switch (this.operation) {
+        const temp = this.operation;
+        this.operation = undefined;
+        console.log('temp: ' + temp)
+        switch (temp) {
             case '+':
-                return parseInt(this.previousOperand) + parseInt(this.currentOperand);
+                return parseFloat(this.previousOperand) + parseFloat(this.currentOperand);
             case '-':
-                return parseInt(this.previousOperand) - parseInt(this.currentOperand);
+                return parseFloat(this.previousOperand) - parseFloat(this.currentOperand);
             case '*':
-                return pareseInt(this.previousOperand) * parseInt(this.currentOperand);
+                return parseFloat(this.previousOperand) * parseFloat(this.currentOperand);
             case '÷':
                 if (this.currentOperand != 0)
-                    return parseInt(this.previousOperand) / parseInt(this.currentOperand);
+                    return parseFloat(this.previousOperand) / parseFloat(this.currentOperand);
             default:
-                return parseInt(this.currentOperand);
+                return parseFloat(this.currentOperand);
         }
     }
 
     selectOperation(operation) {
-        this.operation = operation;
-        this.previousOperand = this.currentOperand;
-        this.currentOperand = '';
-        this.updateDisplay();
-        console.log(typeof (operation));
+        if (this.operation == undefined) {
+            
+            this.operation = operation;
+            if (this.previousOperand != '') {
+                console.log('previousOperand non null...proceeding');
+            
+              
+                console.log('before update : ' + this.previousOperand);
+
+                this.updateDisplay();
+                console.log('after update : ' + this.previousOperand);
+        }
+            else {
+                this.previousOperand = this.currentOperand; 
+                this.currentOperand = '';
+            console.log('before update : ' + this.previousOperand);
+            this.updateDisplay();
+            console.log('after update : ' + this.previousOperand);
+        }
     }
+        
+    
+    
+}
+deleteNumber(){
+    this.currentOperand = this.currentOperand.slice(0, this.currentOperand.length - 1);
+    this.updateDisplay();
+}
+
 }
 
 
@@ -72,11 +102,13 @@ numberButtons.forEach(button => {
 operationButtons.forEach(button => {
     button.addEventListener('click', () => {
         calculator.selectOperation(button.innerText);
-        console.log(button.innerText);
     })
 })
 
-
+deleteButton.addEventListener('click', () => {
+    console.log('deleting');
+    calculator.deleteNumber();
+})
 
 allClearButton.addEventListener('click', () => {
     calculator.clear();
@@ -85,5 +117,6 @@ allClearButton.addEventListener('click', () => {
 equalsButton.addEventListener('click', () => {
     calculator.previousOperand = calculator.compute();
     calculator.currentOperand = '';
+    calculator.operation = undefined;
     calculator.updateDisplay();
 })
